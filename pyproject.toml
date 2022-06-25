@@ -5,7 +5,12 @@ description = ""
 authors = ["Mariya Filiankova <masha1747@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.9,<3.11"
+opencv-python = "^4.6.0"
+pandas = "^1.4.3"
+sklearn = "^0.0"
+keras = "^2.9.0"
+tensorflow = "^2.9.1"
 
 [tool.poetry.dev-dependencies]
 
