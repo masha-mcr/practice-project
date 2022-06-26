@@ -1,0 +1,15 @@
+artifact_uri: file:///D:/practice-project/src/mlruns/0/8712b4c0595942e999c5bd67d2befc7e/artifacts
+end_time: 1656275503919
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+name: ''
+run_id: 8712b4c0595942e999c5bd67d2befc7e
+run_uuid: 8712b4c0595942e999c5bd67d2befc7e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1656275486501
+status: 3
+tags: []
+user_id: masha

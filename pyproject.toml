@@ -4,6 +4,10 @@ version = "0.1.0"
 description = ""
 authors = ["Mariya Filiankova <masha1747@gmail.com>"]
 
+[tool.poetry.scripts]
+fit_predict = "src.practice_project.train:fit_predict"
+
+
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"
 opencv-python = "^4.6.0"
@@ -13,6 +17,7 @@ keras = "^2.9.0"
 tensorflow = "^2.9.1"
 matplotlib = "^3.5.2"
 mlflow = "^1.26.1"
+click = "^8.1.3"
 
 [tool.poetry.dev-dependencies]
 
