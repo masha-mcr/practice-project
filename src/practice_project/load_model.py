@@ -15,14 +15,21 @@ import keras.models
     type=str,
     show_default=True,
 )
-def load_predict(model_id):
+@click.option(
+    "-r",
+    "--ratio",
+    default=0.2,
+    type=float,
+    show_default=True
+)
+def load_predict(model_id, ratio):
     click.secho("Loading model...", fg="green")
     model = get_model(model_id)
     model.summary()
 
     images, labels = load_data(data_dir="data/COVID-19_Radiography_Dataset")
     x_test, y_test = train_val_test_split(
-        images, labels, ratio=(0.3, None), test_only=True
+        images, labels, ratio=(ratio, None), test_only=True
     )
     click.echo(x_test.shape)
     evaluate(model, x_test, y_test, save_metric=False)
@@ -51,7 +58,6 @@ def load_predict(model_id):
 def load_predict_single(model_id, image_path, label):
     click.echo(image_path)
     image_read = read_image(image_path).reshape((-1, 70, 70, 3))
-    click.echo(image_read.shape)
     model = get_model(model_id)
     label_pred = np.argmax(predict(model, x_test=[image_read]), axis=1)
     if label_pred == label:

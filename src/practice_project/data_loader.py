@@ -38,7 +38,7 @@ def read_image(image_path):
     return np.asarray(image)
 
 
-def train_val_test_split(image_list, label_list, ratio=(0.2, 0.2), test_only=False):
+def train_val_test_split(image_list, label_list, ratio, test_only=False, train_only=False):
     x = np.asarray(image_list).astype("float32")
     y = to_categorical(label_list, num_classes=2)
     x_train, x_test, y_train, y_test = train_test_split(
@@ -50,4 +50,8 @@ def train_val_test_split(image_list, label_list, ratio=(0.2, 0.2), test_only=Fal
     x_train, x_val, y_train, y_val = train_test_split(
         x_train, y_train, test_size=ratio[1], random_state=42
     )
+
+    if train_only:
+        return x_train, x_val, y_train, y_val
+
     return x_train, x_val, x_test, y_train, y_val, y_test
