@@ -6,7 +6,8 @@ authors = ["Mariya Filiankova <masha1747@gmail.com>"]
 
 [tool.poetry.scripts]
 fit_predict = "src.practice_project.train:fit_predict"
-
+load_predict = "src.practice_project.load_model:load_predict"
+load_predict_single = "src.practice_project.load_model:load_predict_single"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<3.11"

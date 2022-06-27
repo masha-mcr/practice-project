@@ -12,6 +12,8 @@ import matplotlib.pyplot as plt
 import mlflow
 import click
 
+import os
+
 
 @click.command()
 @click.option(
@@ -43,30 +45,34 @@ import click
     show_default=True,
 )
 def fit_predict(save_model, model_id, epochs, batch_size):
-    click.echo('Loading data')
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
     images, labels = load_data(data_dir='data/COVID-19_Radiography_Dataset')
-    x_train, x_val, x_test, y_train, y_val, y_test = train_val_test_split(images, labels, ratio=(0.2, 0.1))
+    x_train, x_val, x_test, y_train, y_val, y_test = train_val_test_split(images, labels, ratio=(0.3, 0.15))
+
     model = build_model()
     model.summary()
     model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
     with mlflow.start_run(run_name=model_id):
-        es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
-        click.echo('Starting training')
+        es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=3)
         history = model.fit(x_train, y_train,
                                 epochs=epochs, batch_size=batch_size,
                                 validation_data=(x_val, y_val),
                                 callbacks = [es])
-        click.echo('Training ended')
+
         if save_model:
             model.save(f'models/{model_id}')
             with open(f'models/{model_id}_history.pickle', 'wb') as handle:
                 pickle.dump(history.history, handle, protocol=pickle.HIGHEST_PROTOCOL)
-        click.echo('Evaluating')
+
         test_metric = evaluate(model, x_test, y_test, save_metric=True)
         plot_training_metrics(history, model_id, save_model)
+
         report = classification_report(model, x_test, y_test, return_dict=True)
         click.echo(classification_report(model, x_test, y_test))
-        click.echo('Logging')
+
+        click.secho('Logging...', fg='green')
         mlflow.log_param('epochs', epochs)
         mlflow.log_param('batch', batch_size)
         mlflow.log_metric('train_acc', history.history['accuracy'][-1])
@@ -109,12 +115,14 @@ def plot_training_metrics(history, model_id, save_model):
     loss = history.history['loss']
     val_loss = history.history['val_loss']
     epochs = range(len(accuracy))
+
     plt.plot(epochs, accuracy, label='Training accuracy')
     plt.plot(epochs, val_accuracy, label='Validation accuracy')
     plt.title('Training and validation accuracy')
     plt.legend()
     if save_model:
         plt.savefig(f"models/{model_id}_acc_curve.png")
+
     plt.figure()
     plt.plot(epochs, loss, label='Training loss')
     plt.plot(epochs, val_loss, label='Validation loss')
